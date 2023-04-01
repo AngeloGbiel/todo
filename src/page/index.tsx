@@ -7,30 +7,33 @@ import { ListItemType } from '../components/todo/type/Type'
 
 export default function HomePage() {
   const [item, setItem] = useState<ListItemType[]>([])
-  useEffect(()=>{
-    if(!localStorage.getItem('item')){
-      localStorage.setItem('item',JSON.stringify([]))
-    }else {
-      const storage = JSON.parse(localStorage.getItem('item')!)
-      console.log(storage.length);
-      if(storage.length!==0){
-        setItem(storage)
-        
-      }
+  useEffect(() => {
+    if (!localStorage.getItem('item')) {
+      localStorage.setItem('item', JSON.stringify([]))
+    } else {
+      setItem(JSON.parse(localStorage.getItem('item')!))
     }
-  },[])
+  }, [])
 
-  const AddList = (newlist: ListItemType) => { //!adcionar novos elementos dentro da lista-----------
-    // console.log(newlist);
-    setItem([...item, newlist])
+  const showValues = () => {
+    setItem(JSON.parse(localStorage.getItem('item')!))
+  }
 
+  const AddList = (newlist: ListItemType) => { //!adcionar novos elementos dentro do localStorage-----------
+    // setItem([...item, newlist])
+    let values = JSON.parse(localStorage.getItem('item')!)
+    values.push(newlist)
+    localStorage.setItem('item', JSON.stringify(values))
+    showValues() //!Chamar a função que adcionar os elementos do localStorage dentro do setList
   }
   const Delete = (id: number) => { //!deletar elementos dentro da lista-------------------------
     var filter = item.filter((value) => value.id !== id)
     filter.map((value, i) => {
       value.id = i
     })
-    setItem(filter)
+    // setItem(filter)
+    localStorage.setItem('item',JSON.stringify(filter))
+    showValues() //!Chamar a função para deletar os elementos do localStorage dentro do setList
   }
   const done = (id: number) => { //!Mudar o complete de um elemento------------------------------
     const newList: ListItemType = {
@@ -42,8 +45,9 @@ export default function HomePage() {
     const index = item.findIndex((value) => value.id == id)
     const itemlist = [...item]
     itemlist[index] = newList
-    setItem(itemlist)
-    console.log(item[id].complete);
+    localStorage.setItem('item',JSON.stringify(itemlist))
+    showValues() //!Chamar a função que troca o complete dos elementos do localStorage dentro do setList
+    // setItem(itemlist)
     // item[id].complete=!item[id].complete
 
   }
@@ -51,9 +55,13 @@ export default function HomePage() {
   return (
     <ContainerStyled maxWidth='sm'>
       <Form AddList={AddList} index={item} />
-      {item.map((value, i) => {
-        return <Item key={i} change={done} deletes={Delete} index={i} itemList={value} />
-      })}
+      {
+        item.map((value, i) => {
+          return (
+            <Item key={i} change={done} deletes={Delete} index={i} itemList={value} />
+          )
+        })
+      }
     </ContainerStyled>
   )
 }
