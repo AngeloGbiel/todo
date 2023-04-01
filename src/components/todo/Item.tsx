@@ -46,6 +46,9 @@ const ItemStyled = styled.div<Done>`
     /* transition: all .3s; */
     p{
         font-size: 1.2rem;
+        /* background-color: red; */
+        max-width: 85%; 
+        word-break: break-all; //TODOfaz o texto quebrar a linha quando chega no limite
     }
     .buttons{
         display: flex;

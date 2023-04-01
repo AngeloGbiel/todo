@@ -10,8 +10,9 @@ interface Props{
 }
 
 export default function Form({index,AddList}:Props) {
-  const [form,setForm]=useState<string>()
-  const Add = () =>{
+  const [form,setForm]=useState<string>('') //passar um valor para evitar o erro q ocorre quando você está tentando alterar o valor de um elemento de entrada (input) de não controlado (uncontrolled) para controlado (controlled)
+
+  const Validation = () =>{
     if(!form){
       alert('Digite alguma coisa')
     }else{
@@ -23,13 +24,22 @@ export default function Form({index,AddList}:Props) {
       // setForm("")
       AddList(newTask)
     }
+    setForm('')
+  }
 
+  const Add = () =>{
+    Validation()
+  }
+  const AddEnter = (e:React.KeyboardEvent<HTMLDivElement>) =>{
+    if(e.key=='Enter'){
+      Validation()
+    }
   }
   
   return (
     <StackStyled spacing={2} direction="row">
-      <TextField onChange={(e)=>setForm(e.target.value)} id="outlined-basic" size='small' label="Add tasks" variant="outlined" style={{width:"100%"}} />
-      <Button onClick={Add} variant="contained">+</Button>
+      <TextField value={form} onChange={(e)=>setForm(e.target.value)} id="outlined-basic" size='small' label="Add tasks" variant="outlined" style={{width:"100%"}} onKeyPress={(key)=>AddEnter(key)} /> 
+      <Button onClick={()=>Add()} variant="contained" >+</Button>
     </StackStyled>
   )
 }
