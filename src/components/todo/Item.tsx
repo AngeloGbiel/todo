@@ -9,26 +9,24 @@ interface Props{
     index: number,
     deletes:(id:number)=>void,
     change:(id:number)=>void
+    EditItem: (id:number)=>void
 }
 interface Done{
     done:boolean
 }
 
-export default function Item({itemList, index, deletes,change}:Props) {
+export default function Item({itemList, index, deletes,change,EditItem}:Props) {
     const [done,setDone] = useState(false)
     useEffect(()=>{
         setDone(itemList.complete)
     },[itemList.complete])
-    const changeDone = () =>{
-        change(index)
-    }
 
   return (
     <ItemStyled done={done}>
         <p>{itemList.title}</p>
         <div className='buttons'>
-            <GrIcons.GrCompliance onClick={()=>changeDone()} />
-            <MdIcons.MdModeEditOutline />
+            <GrIcons.GrCompliance onClick={()=>change(index)} />
+            <MdIcons.MdModeEditOutline onClick={()=>EditItem(index)} />
             <MdIcons.MdDelete onClick={()=>deletes(index)}/>
         </div>
     </ItemStyled>
@@ -48,11 +46,15 @@ const ItemStyled = styled.div<Done>`
         font-size: 1.2rem;
         /* background-color: red; */
         max-width: 85%; 
-        word-break: break-all; //TODOfaz o texto quebrar a linha quando chega no limite
     }
     .buttons{
         display: flex;
         gap: 5px;
         font-size: 1.1rem;
+    }
+    @media(max-width:450px){
+        p{
+            font-size: .9rem;
+        }
     }
 `

@@ -8,8 +8,13 @@ import { ListItemType } from '../components/todo/type/Type'
 
 export default function HomePage() {
   const [item, setItem] = useState<ListItemType[]>(JSON.parse(localStorage.getItem('item')!)||[])
+  const [edit,setEdit]=useState<boolean>(false)
+  const [editForId, setEditForId] = useState<number>(0)
+
   localStorage.setItem('item', JSON.stringify(item))
-  console.log(item);
+  
+
+
   useEffect(() => {
     if (!localStorage.getItem('item')) {
       localStorage.setItem('item', JSON.stringify([]))
@@ -32,6 +37,7 @@ export default function HomePage() {
     var filter = item.filter((value) => value.id !== id)
     localStorage.setItem('item', JSON.stringify(filter))
     showValues() //!Chamar a função para deletar os elementos do localStorage dentro do setList
+    setEdit(false)
   }
   const done = (id: number) => { //!Mudar o complete de um elemento------------------------------
 
@@ -47,15 +53,36 @@ export default function HomePage() {
     showValues() //!Chamar a função que troca o complete dos elementos do localStorage dentro do setList
   }
 
+  const EditItem = (id:number) =>{
+    setEditForId(id)
+    setEdit(true)
+  }
+  const SaveChange = (newTitle:string) =>{
+    setEdit(false)
+    const index = item.findIndex((value) => value.id == editForId)
+    console.log(editForId);
+    const newList: ListItemType = {
+      id: editForId,
+      title: newTitle,
+      complete: item[index].complete
+    }
+    
+    const itemlist = [...item]
+    itemlist[index] = newList
+    console.log(itemlist);
+    
+    localStorage.setItem('item', JSON.stringify(itemlist))
+    showValues()
+  }
   return (
     <ContainerStyled maxWidth='sm'>
-      <Form AddList={AddList} index={item} />
+      <Form edit={edit} editForId={editForId} SaveChange={SaveChange} AddList={AddList} index={item} />
       <Reorder.Group axis='y' values={item} onReorder={setItem}>
         {
           item.map((value, i) => {
             return (
               <ReorderStyled key={value.id} value={value}>
-                <Item key={i} change={done} deletes={Delete} index={value.id} itemList={value} />
+                <Item EditItem={EditItem} key={i} change={done} deletes={Delete} index={value.id} itemList={value} />
               </ReorderStyled>
             )
           })
@@ -70,5 +97,4 @@ const ContainerStyled = styled(Container)`
 `
 const ReorderStyled = styled(Reorder.Item)`
   list-style: none;
-
 `
