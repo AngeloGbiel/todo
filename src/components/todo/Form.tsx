@@ -3,6 +3,7 @@ import { Stack } from '@mui/system'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { ListItemType } from './type/Type'
+import * as GiIcons from 'react-icons/gi'
 
 interface Props {
   index: ListItemType[],
@@ -61,7 +62,7 @@ export default function Form({ index, AddList, SaveChange, editForId, edit }: Pr
     edit ? <StackStyled spacing={2} direction="row">
             <TextField value={title}  onChange={(e) => setTitle(e.target.value)} id="outlined-basic" size='small' label='Edit Task' variant="outlined" style={{ width: "100%" }} onKeyPress={(key) => AddEnter(key)} />
             <Button onClick={() => SaveChange(title)} variant="contained" >
-              <img style={{height:'20px'}} src='../../../public/confirm.png'/>
+              <GiIcons.GiConfirmed/>
             </Button>
           </StackStyled> :
           <StackStyled spacing={2} direction="row">
@@ -75,4 +76,7 @@ const StackStyled = styled(Stack)`
     padding: 10px 10px 10px 10px;
     width: 100%;
     margin-bottom:2.5rem;
+    Button{
+      font-size:15px;
+    }
 `

@@ -25,9 +25,9 @@ export default function Item({itemList, index, deletes,change,EditItem}:Props) {
     <ItemStyled done={done}>
         <p>{itemList.title}</p>
         <div className='buttons'>
-            <GrIcons.GrCompliance onClick={()=>change(index)} />
-            <MdIcons.MdModeEditOutline onClick={()=>EditItem(index)} />
-            <MdIcons.MdDelete onClick={()=>deletes(index)}/>
+            <GrIcons.GrCompliance className='button' onClick={()=>change(index)} />
+            <MdIcons.MdModeEditOutline className='button' onClick={()=>EditItem(index)} />
+            <MdIcons.MdDelete className='button' onClick={()=>deletes(index)}/>
         </div>
     </ItemStyled>
   )
@@ -55,6 +55,9 @@ const ItemStyled = styled.div<Done>`
     @media(max-width:450px){
         p{
             font-size: .9rem;
+        }
+        .button{
+            font-size: 1.3rem;
         }
     }
 `
